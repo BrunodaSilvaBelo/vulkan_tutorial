@@ -7,6 +7,7 @@ find_package(Vulkan REQUIRED)
 find_package(GLFW3 REQUIRED)
 find_package(CppCheck)
 find_package(ClangTidy)
+find_package(GlslangValidator REQUIRED)
 
 set (CMAKE_LINK_WHAT_YOU_USE TRUE)
 
@@ -30,14 +31,4 @@ target_compile_options( ${EXE_NAME} PRIVATE
   $<$<CXX_COMPILER_ID:Clang>:-Wall -Wextra -pedantic -Weverything
   -Wno-c++98-compat> )
 
-add_custom_command(TARGET ${EXE_NAME} POST_BUILD
-  COMMAND "${CMAKE_COMMAND}" -E copy_directory
-  "${CMAKE_SOURCE_DIR}/shaders/"
-  "${CMAKE_BINARY_DIR}/shaders/")
-
-add_custom_command(TARGET ${EXE_NAME} POST_BUILD
-  COMMAND "/home/guajar/Program/VulkanSDK/1.0.54.0/x86_64/bin/glslangValidator" -V *.vert
-  WORKING_DIRECTORY "shaders")
-add_custom_command(TARGET ${EXE_NAME} POST_BUILD
-  COMMAND "/home/guajar/Program/VulkanSDK/1.0.54.0/x86_64/bin/glslangValidator" -V *.frag
-  WORKING_DIRECTORY "shaders")
+compile_shaders(${EXE_NAME})
